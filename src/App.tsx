@@ -3,11 +3,13 @@ import {
   ArrowRight,
   BarChart3,
   BedDouble,
+  Bell,
   Building2,
   Check,
   ChevronDown,
   FileText,
   IndianRupee,
+  KeyRound,
   Layers,
   Lock,
   Mail,
@@ -318,8 +320,13 @@ function Features() {
           eyebrow="Join by QR"
           icon={QrCode}
           title="New residents fill in their own details"
-          text="Print your join QR at the front desk. New people scan it, fill in their name, phone, ID and emergency contact on their own phone, and you get a notification. Approve it, pick a bed and rent, done."
-          points={['No typing on your side, no lost paper forms', 'One QR for the whole PG or one per property', 'Turn it off or make a new one any time']}
+          text="Print your join QR at the front desk. New people scan it in the PG Sathi app (or with any phone camera), fill in their name, phone, ID and emergency contact, and create their own login. You get a notification; approve it, pick a bed and rent, and their app opens their room, rent and bills."
+          points={[
+            'No typing on your side, no lost paper forms',
+            'Residents create their own login: no passwords to share',
+            'New requests show up in your notifications straight away',
+            'One QR for the whole PG or one per property; turn it off any time',
+          ]}
           image={
             <div className="relative">
               <BrowserShot src="/screens/join-requests.png" alt="Join requests waiting for approval" />
@@ -343,12 +350,14 @@ function Features() {
 
 function MoreFeatures() {
   const items = [
-    { icon: Smartphone, title: 'Resident app', text: 'Residents see their bills, pay rent and download receipts on Android.' },
+    { icon: Smartphone, title: 'Resident app', text: 'Residents join by scanning your QR, see their room and bills, pay rent online and get receipts on Android.' },
+    { icon: Bell, title: 'Instant alerts', text: 'New join requests, overdue rent and upcoming move-outs show up in your notifications.' },
     { icon: Building2, title: 'Many properties', text: 'Run several PGs from one login and switch between them in a click.' },
     { icon: Users, title: 'Team roles', text: 'Give your manager, accountant or staff their own login with the right access.' },
     { icon: IndianRupee, title: 'Expenses', text: 'Electricity, groceries, salaries: log them with receipts and see your real profit.' },
     { icon: FileText, title: 'Bills & receipts', text: 'Clean, printable bills and receipts with your name, address and GSTIN.' },
     { icon: ShieldCheck, title: 'Your data stays yours', text: 'Every business’s data is kept separate and private. Every change is logged.' },
+    { icon: KeyRound, title: 'Secure sign-in', text: 'Sign in or reset your password with a 6-digit code sent to your email.' },
   ];
   return (
     <section className="bg-navy-900 py-24 text-white">
@@ -357,7 +366,7 @@ function MoreFeatures() {
           <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent-200">And much more</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Small things that save you hours</h2>
         </div>
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {items.map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl bg-white/[0.04] p-6 ring-1 ring-white/10">
               <span className="grid size-10 place-items-center rounded-xl bg-accent-600/20 text-accent-200">
@@ -377,7 +386,7 @@ function HowItWorks() {
   const steps = [
     { n: '1', title: 'Book a demo and pick a plan', text: 'We call you, show you PG Sathi and set up your account once you choose a plan. You get a sign-in link by WhatsApp or email.' },
     { n: '2', title: 'Add rooms in bulk', text: 'Type “101 to 110”, choose beds per room and one rent for all. Then the next floor is filled in for you.' },
-    { n: '3', title: 'Add residents, start collecting', text: 'Add residents yourself or let them scan your join QR. Generate the month’s rent and start collecting.' },
+    { n: '3', title: 'Residents join, you start collecting', text: 'Residents scan your join QR in the app and you approve them, or add them yourself. Generate the month’s rent and start collecting.' },
   ];
   return (
     <section id="how" className="py-24">
@@ -588,6 +597,10 @@ const FAQS = [
   {
     q: 'I don’t have Razorpay. Can residents still pay by UPI?',
     a: 'Yes. Add your UPI ID and every bill shows a QR code with the exact amount. Residents pay from GPay, PhonePe or Paytm, and you record the payment in a tap.',
+  },
+  {
+    q: 'How do new residents join?',
+    a: 'Print or share your join QR. New residents scan it in the PG Sathi app, fill in their details and create their own login. You get a notification, approve them and pick their bed and rent, and their app opens straight away. No paper forms, no passwords to share.',
   },
   {
     q: 'Is my data safe?',

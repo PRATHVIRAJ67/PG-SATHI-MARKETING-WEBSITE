@@ -61,7 +61,7 @@ export const EVERY_PLAN = [
   'Payments, receipts and deposits',
   'Online rent payments (your Razorpay)',
   'UPI QR on every bill',
-  'Join-by-QR for new residents',
-  'Resident app for bills and receipts',
+  'Join by QR, with residents’ own app login',
+  'Resident app: room, bills, pay online, receipts',
   'Expenses and reports with CSV export',
 ];
