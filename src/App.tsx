@@ -103,6 +103,7 @@ export function App() {
         <Hero />
         <Problem />
         <Features />
+        <ResidentApp />
         <MoreFeatures />
         <HowItWorks />
         <Pricing />
@@ -117,6 +118,7 @@ export function App() {
 
 const NAV = [
   { href: '#features', label: 'Features' },
+  { href: '#app', label: 'Resident app' },
   { href: '#how', label: 'How it works' },
   { href: '#pricing', label: 'Pricing' },
   { href: '#faq', label: 'FAQ' },
@@ -348,9 +350,61 @@ function Features() {
   );
 }
 
+function ResidentApp() {
+  const points = [
+    { icon: Wallet, title: 'Pay the monthly bill in a tap', text: 'Rent and charges in one bill. Pay online by UPI, card or netbanking, or open GPay, PhonePe or Paytm with the amount filled in.' },
+    { icon: Receipt, title: 'Proof of every payment', text: 'Every payment has a receipt with its number, date and method. No more “I paid you last week” arguments.' },
+    { icon: FileText, title: 'All bills and dues in one place', text: 'What is due, what is overdue and what has been paid, month by month.' },
+    { icon: QrCode, title: 'Join by scanning a QR', text: 'New residents scan your QR in the app, fill in their details and create their own login.' },
+    { icon: BedDouble, title: 'Room, rent and deposit', text: 'Their room and bed, monthly rent, due date and the deposit you hold, always up to date.' },
+    { icon: Bell, title: 'Rent reminders', text: 'Reminders on their phone before rent is due.', soon: true },
+  ];
+  return (
+    <section id="app" className="overflow-hidden bg-gradient-to-b from-accent-50/60 to-white py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <SectionHeading eyebrow="Resident app" title="Your residents get the PG Sathi app">
+          On Android and iPhone. Residents see their room and bills, pay rent online and keep every receipt, so you never chase anyone for proof of payment.
+        </SectionHeading>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          {['Android', 'iPhone'].map((os) => (
+            <span key={os} className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-navy-900 ring-1 ring-gray-200">
+              <Smartphone className="size-4 text-accent-600" /> {os}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-14 flex items-start justify-center gap-4 sm:gap-6">
+          {[
+            { src: '/screens/app-join.png', alt: 'Resident app sign-in with “Join a PG by scanning QR”', cls: 'hidden md:block mt-16' },
+            { src: '/screens/app-home.png', alt: 'Resident app home: room, monthly rent, deposit and recent payments', cls: '' },
+            { src: '/screens/app-bill.png', alt: 'A monthly bill in the resident app, marked paid', cls: 'hidden sm:block mt-10' },
+            { src: '/screens/app-payments.png', alt: 'Payment receipts in the resident app', cls: 'hidden lg:block mt-20' },
+          ].map((s) => (
+            <PhoneShot key={s.src} src={s.src} alt={s.alt} className={`w-[200px] shrink-0 sm:w-[210px] lg:w-[220px] ${s.cls}`} />
+          ))}
+        </div>
+
+        <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {points.map(({ icon: Icon, title, text, soon }) => (
+            <div key={title} className="rounded-2xl bg-white p-6 ring-1 ring-gray-200">
+              <div className="flex items-center justify-between">
+                <span className="grid size-10 place-items-center rounded-xl bg-accent-50 text-accent-600">
+                  <Icon className="size-5" />
+                </span>
+                {soon && <span className="rounded-full bg-warning-50 px-2.5 py-1 text-xs font-semibold text-warning-600">Coming soon</span>}
+              </div>
+              <h3 className="mt-4 text-[17px] font-semibold text-navy-900">{title}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function MoreFeatures() {
   const items = [
-    { icon: Smartphone, title: 'Resident app', text: 'Residents join by scanning your QR, see their room and bills, pay rent online and get receipts on Android.' },
     { icon: Bell, title: 'Instant alerts', text: 'New join requests, overdue rent and upcoming move-outs show up in your notifications.' },
     { icon: Building2, title: 'Many properties', text: 'Run several PGs from one login and switch between them in a click.' },
     { icon: Users, title: 'Team roles', text: 'Give your manager, accountant or staff their own login with the right access.' },
@@ -573,7 +627,7 @@ function DemoForm() {
 const FAQS = [
   {
     q: 'Do I need to install anything?',
-    a: 'No. PG Sathi runs in your browser on a laptop or phone. Residents can use the PG Sathi Android app to see bills and pay, or simply scan a UPI QR.',
+    a: 'No. You run PG Sathi in your browser on a laptop or phone. Your residents get the PG Sathi app on Android and iPhone to see their bills, pay rent and keep receipts.',
   },
   {
     q: 'When residents pay online, where does the money go?',
