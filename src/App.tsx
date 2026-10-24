@@ -174,23 +174,29 @@ function Nav() {
   );
 }
 
-/** Phones: a "Book a free demo" bar once you scroll past the hero, hidden while the form is on screen. */
+/** Phones: a "Book a free demo" bar once you scroll past the hero, hidden while the form or the final call-to-action is on screen. */
 function MobileCta() {
   const [show, setShow] = useState(false);
-  const [formVisible, setFormVisible] = useState(false);
+  const [onScreen, setOnScreen] = useState<Record<string, boolean>>({});
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > 640);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    const form = document.getElementById('demo');
-    const io = form ? new IntersectionObserver(([e]) => setFormVisible(!!e?.isIntersecting), { threshold: 0.15 }) : null;
-    if (form && io) io.observe(form);
+    // Both already have their own "Book a free demo" button.
+    const io = new IntersectionObserver(
+      (entries) => setOnScreen((prev) => ({ ...prev, ...Object.fromEntries(entries.map((e) => [e.target.id, e.isIntersecting])) })),
+      { threshold: 0.15 },
+    );
+    for (const id of ['demo', 'get-started']) {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    }
     return () => {
       window.removeEventListener('scroll', onScroll);
-      io?.disconnect();
+      io.disconnect();
     };
   }, []);
-  const visible = show && !formVisible;
+  const visible = show && !Object.values(onScreen).some(Boolean);
   return (
     <div
       className={`fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 backdrop-blur-md transition-transform duration-300 md:hidden ${visible ? 'translate-y-0' : 'translate-y-full'}`}
@@ -207,44 +213,30 @@ function Hero() {
   return (
     <section className="relative">
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[620px] bg-[radial-gradient(60%_60%_at_50%_0%,#e0e0fb_0%,rgba(255,255,255,0)_70%)]" aria-hidden />
-      {/* Phones: a dark, bolder hero */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,#14213D_0%,#0B1326_100%)] sm:hidden" aria-hidden />
-      <div className="pointer-events-none absolute -left-28 top-10 -z-10 size-80 rounded-full bg-accent-600/40 blur-3xl sm:hidden" aria-hidden />
-      <div className="pointer-events-none absolute -right-28 top-[34rem] -z-10 size-80 rounded-full bg-success-600/25 blur-3xl sm:hidden" aria-hidden />
       <div className="mx-auto max-w-6xl px-4 pb-12 pt-10 sm:px-6 sm:pb-16 sm:pt-20">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[13px] font-medium text-accent-200 ring-1 ring-white/15 sm:bg-white sm:text-accent-700 sm:ring-accent-200">
+          <p className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[13px] font-medium text-accent-700 ring-1 ring-accent-200">
             <BedDouble className="size-4" /> Made for PGs, hostels and co-living in India
           </p>
-          <h1 className="mt-6 text-[2.5rem] font-semibold leading-[1.06] tracking-tight text-white sm:text-6xl sm:text-navy-900">
+          <h1 className="mt-6 text-[2.5rem] font-semibold leading-[1.06] tracking-tight text-navy-900 sm:text-6xl">
             Run your PG from one screen.{' '}
-            <span className="bg-gradient-to-r from-[#A5A6FF] to-[#6EE7B7] bg-clip-text text-transparent sm:bg-none sm:text-accent-600">Rent, rooms and residents</span>, sorted.
+            <span className="text-accent-600">Rent, rooms and residents</span>, sorted.
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-white/75 sm:mt-6 sm:text-lg sm:text-gray-600">
+          <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-gray-600 sm:mt-6 sm:text-lg">
             PG Sathi tracks every bed, bills rent every month, records payments and deposits, and lets residents pay online by UPI. No more notebooks, Excel sheets or chasing people on WhatsApp.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <div className="w-full sm:hidden">
-              <Button href="#demo" size="lg" variant="light" className="w-full">
-                Book a free demo <ArrowRight className="size-4" />
-              </Button>
-            </div>
-            <a href="#features" className="inline-flex h-12 w-full items-center justify-center rounded-xl text-[15px] font-semibold text-white ring-1 ring-white/25 sm:hidden">
+            <Button href="#demo" size="lg" className="w-full sm:w-auto">
+              Book a free demo <ArrowRight className="size-4" />
+            </Button>
+            <Button href="#features" size="lg" variant="secondary" className="w-full sm:w-auto">
               See what it does
-            </a>
-            <div className="hidden sm:flex sm:gap-3">
-              <Button href="#demo" size="lg">
-                Book a free demo <ArrowRight className="size-4" />
-              </Button>
-              <Button href="#features" size="lg" variant="secondary">
-                See what it does
-              </Button>
-            </div>
+            </Button>
           </div>
-          <ul className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[13px] text-white/85 sm:gap-x-6 sm:text-gray-500">
+          <ul className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[13px] text-gray-600 sm:gap-x-6 sm:text-gray-500">
             {['Set up for you by our team', 'Residents join by QR', 'Works on phone and laptop'].map((t) => (
-              <li key={t} className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 ring-1 ring-white/15 sm:bg-transparent sm:p-0 sm:ring-0">
-                <Check className="size-4 text-[#6EE7B7] sm:text-success-600" /> {t}
+              <li key={t} className="flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 ring-1 ring-gray-200 sm:bg-transparent sm:p-0 sm:ring-0">
+                <Check className="size-4 text-success-600" /> {t}
               </li>
             ))}
           </ul>
@@ -262,7 +254,7 @@ function Hero() {
               ₹8,000
             </p>
           </div>
-          <div className="absolute -right-12 bottom-24 rounded-2xl bg-accent-600 px-3 py-2.5 text-white shadow-xl">
+          <div className="absolute -right-12 bottom-24 rounded-2xl bg-navy-900 px-3 py-2.5 text-white shadow-xl">
             <p className="text-[11px] font-medium text-white/75">New join request</p>
             <p className="mt-0.5 flex items-center gap-1.5 text-[14px] font-semibold">
               <QrCode className="size-4 text-white/80" /> Kiran · Room 2
@@ -781,7 +773,7 @@ function ContactButtons({ light = false }: { light?: boolean }) {
 
 function FinalCta() {
   return (
-    <section className="px-4 pb-24 sm:px-6">
+    <section id="get-started" className="px-4 pb-24 sm:px-6">
       <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-navy-900 px-6 py-16 text-center sm:px-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_80%_at_50%_0%,rgba(108,109,232,0.45)_0%,rgba(20,33,61,0)_70%)]" aria-hidden />
         <div className="relative">
