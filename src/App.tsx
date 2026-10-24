@@ -26,7 +26,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
-import { CONTACT, EVERY_PLAN, PLANS, SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from './config';
+import { CONTACT, EVERY_PLAN, SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from './config';
 
 // ---------------------------------------------------------------------------
 // Small building blocks
@@ -415,46 +415,31 @@ function Pricing() {
   return (
     <section id="pricing" className="border-y border-gray-100 bg-gray-25 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <SectionHeading eyebrow="Pricing" title="Simple, honest pricing">
-          Every plan includes every feature. Pick the one that fits the size of your business, and change any time.
+        <SectionHeading eyebrow="Pricing" title="Affordable plans for every PG">
+          Whether you run one PG or several, we’ll suggest a plan that fits your business and your budget. Every plan includes every feature, with no hidden charges.
         </SectionHeading>
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {PLANS.map((p) => (
-            <div
-              key={p.name}
-              className={`relative flex flex-col rounded-2xl bg-white p-7 ${p.highlighted ? 'ring-2 ring-accent-600 shadow-[0_20px_50px_-20px_rgba(91,92,226,0.45)]' : 'ring-1 ring-gray-200'}`}
-            >
-              {p.highlighted && <span className="absolute -top-3 left-7 rounded-full bg-accent-600 px-3 py-1 text-xs font-semibold text-white">Most popular</span>}
-              <h3 className="text-lg font-semibold text-navy-900">{p.name}</h3>
-              <p className="mt-1 text-[14px] text-gray-500">{p.description}</p>
-              <p className="mt-6 flex items-baseline gap-1.5">
-                <span className="text-4xl font-semibold tracking-tight text-navy-900">{p.price}</span>
-                <span className="text-[14px] text-gray-500">{p.period}</span>
-              </p>
-              <p className="mt-1 text-[13px] font-medium text-success-700">{p.note}</p>
-              <ul className="mt-6 flex-1 space-y-3">
-                {p.limits.map((l) => (
-                  <li key={l} className="flex gap-3 text-[15px] text-gray-700">
-                    <Check className="mt-0.5 size-4 shrink-0 text-accent-600" /> {l}
+        <div className="mx-auto mt-12 max-w-4xl overflow-hidden rounded-2xl bg-white ring-1 ring-gray-200 shadow-[0_20px_50px_-24px_rgba(20,33,61,0.25)]">
+          <div className="grid gap-8 p-7 sm:p-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center">
+            <div>
+              <p className="text-[14px] font-semibold text-navy-900">Included in every plan</p>
+              <ul className="mt-4 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
+                {EVERY_PLAN.map((f) => (
+                  <li key={f} className="flex gap-2.5 text-[14px] text-gray-700">
+                    <Check className="mt-0.5 size-4 shrink-0 text-success-600" /> {f}
                   </li>
                 ))}
               </ul>
-              <Button href="#demo" variant={p.highlighted ? 'primary' : 'secondary'} className="mt-8 w-full">
-                {p.cta}
+            </div>
+            <div className="rounded-2xl bg-navy-900 p-7 text-center text-white">
+              <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent-200">Your price</p>
+              <p className="mt-3 text-2xl font-semibold tracking-tight">Made for your PG</p>
+              <p className="mt-2 text-[14px] leading-relaxed text-white/75">Tell us about your PG and we’ll share an affordable plan, set everything up for you and train your team.</p>
+              <Button href="#demo" variant="light" className="mt-6 w-full">
+                Get your price <ArrowRight className="size-4" />
               </Button>
             </div>
-          ))}
-        </div>
-        <div className="mx-auto mt-10 max-w-4xl rounded-2xl bg-white p-6 ring-1 ring-gray-200">
-          <p className="text-[14px] font-semibold text-navy-900">Included in every plan</p>
-          <ul className="mt-4 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
-            {EVERY_PLAN.map((f) => (
-              <li key={f} className="flex gap-2.5 text-[14px] text-gray-700">
-                <Check className="mt-0.5 size-4 shrink-0 text-success-600" /> {f}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 text-xs text-gray-500">Prices exclude GST. Online payment fees are charged by Razorpay on your own account.</p>
+          </div>
+          <p className="border-t border-gray-100 px-7 py-4 text-xs text-gray-500 sm:px-10">Online payment fees are charged by Razorpay on your own account.</p>
         </div>
       </div>
     </section>
