@@ -24,7 +24,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
-import { CONTACT, EVERY_PLAN, PLANS, SIGN_IN_URL, SIGN_UP_URL } from './config';
+import { CONTACT, EVERY_PLAN, PLANS, SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from './config';
 
 // ---------------------------------------------------------------------------
 // Small building blocks
@@ -104,6 +104,7 @@ export function App() {
         <MoreFeatures />
         <HowItWorks />
         <Pricing />
+        <DemoForm />
         <Faq />
         <FinalCta />
       </main>
@@ -117,6 +118,7 @@ const NAV = [
   { href: '#how', label: 'How it works' },
   { href: '#pricing', label: 'Pricing' },
   { href: '#faq', label: 'FAQ' },
+  { href: '#demo', label: 'Contact' },
 ];
 
 function Nav() {
@@ -133,10 +135,7 @@ function Nav() {
           ))}
         </nav>
         <div className="hidden items-center gap-2 md:flex">
-          <a href={SIGN_IN_URL} target="_blank" rel="noreferrer" className="px-3 text-[14px] font-medium text-gray-700 hover:text-navy-900">
-            Sign in
-          </a>
-          <Button href={SIGN_UP_URL}>Start free</Button>
+          <Button href="#demo">Book a demo</Button>
         </div>
         <button className="grid size-10 place-items-center rounded-lg text-navy-900 md:hidden" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen((o) => !o)}>
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -149,11 +148,10 @@ function Nav() {
               {n.label}
             </a>
           ))}
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <Button href={SIGN_IN_URL} variant="secondary">
-              Sign in
+          <div className="mt-3">
+            <Button href="#demo" className="w-full">
+              Book a demo
             </Button>
-            <Button href={SIGN_UP_URL}>Start free</Button>
           </div>
         </div>
       )}
@@ -177,15 +175,15 @@ function Hero() {
             PG Sathi tracks every bed, bills rent every month, records payments and deposits, and lets residents pay online by UPI. No more notebooks, Excel sheets or chasing people on WhatsApp.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button href={SIGN_UP_URL} size="lg">
-              Start free <ArrowRight className="size-4" />
+            <Button href="#demo" size="lg">
+              Book a free demo <ArrowRight className="size-4" />
             </Button>
             <Button href="#features" size="lg" variant="secondary">
               See what it does
             </Button>
           </div>
           <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-gray-500">
-            {['Free plan for one PG', 'Set up in 10 minutes', 'Works on phone and laptop'].map((t) => (
+            {['Set up for you by our team', 'Residents join by QR', 'Works on phone and laptop'].map((t) => (
               <li key={t} className="flex items-center gap-1.5">
                 <Check className="size-4 text-success-600" /> {t}
               </li>
@@ -377,7 +375,7 @@ function MoreFeatures() {
 
 function HowItWorks() {
   const steps = [
-    { n: '1', title: 'Sign up and add your PG', text: 'Create your account and add your property: name, address and facilities. Takes two minutes.' },
+    { n: '1', title: 'Book a demo and pick a plan', text: 'We call you, show you PG Sathi and set up your account once you choose a plan. You get a sign-in link by WhatsApp or email.' },
     { n: '2', title: 'Add rooms in bulk', text: 'Type “101 to 110”, choose beds per room and one rent for all. Then the next floor is filled in for you.' },
     { n: '3', title: 'Add residents, start collecting', text: 'Add residents yourself or let them scan your join QR. Generate the month’s rent and start collecting.' },
   ];
@@ -408,7 +406,7 @@ function Pricing() {
   return (
     <section id="pricing" className="border-y border-gray-100 bg-gray-25 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <SectionHeading eyebrow="Pricing" title="Simple pricing. Start free.">
+        <SectionHeading eyebrow="Pricing" title="Simple, honest pricing">
           Every plan includes every feature. Pick the one that fits the size of your business, and change any time.
         </SectionHeading>
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
@@ -432,7 +430,7 @@ function Pricing() {
                   </li>
                 ))}
               </ul>
-              <Button href={SIGN_UP_URL} variant={p.highlighted ? 'primary' : 'secondary'} className="mt-8 w-full">
+              <Button href="#demo" variant={p.highlighted ? 'primary' : 'secondary'} className="mt-8 w-full">
                 {p.cta}
               </Button>
             </div>
@@ -448,6 +446,130 @@ function Pricing() {
             ))}
           </ul>
           <p className="mt-4 text-xs text-gray-500">Prices exclude GST. Online payment fees are charged by Razorpay on your own account.</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const BEDS = ['Up to 20 beds', '20 to 50 beds', '50 to 100 beds', 'More than 100 beds'];
+
+/** "Book a demo": goes to Super admin → Leads. */
+function DemoForm() {
+  const [f, setF] = useState({ business_name: '', owner_name: '', phone: '', email: '', city: '', beds: '', message: '' });
+  const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [error, setError] = useState<string | null>(null);
+  const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF((s) => ({ ...s, [k]: e.target.value }));
+  const problem =
+    f.business_name.trim().length < 2 ? 'Enter your PG’s name.'
+    : f.owner_name.trim().length < 2 ? 'Enter your name.'
+    : f.phone.replace(/\D/g, '').length < 10 ? 'Enter your 10-digit phone number.'
+    : null;
+
+  const submit = async (e: { preventDefault(): void }) => {
+    e.preventDefault();
+    if (problem) {
+      setError(problem);
+      return;
+    }
+    setError(null);
+    setState('sending');
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/submit_lead`, {
+        method: 'POST',
+        headers: { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_data: Object.fromEntries(Object.entries(f).map(([k, v]) => [k, v.trim() || null])) }),
+      });
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as { message?: string };
+        throw new Error(body.message ?? 'Could not send your request. Please try again.');
+      }
+      setState('sent');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not send your request. Please try again.');
+      setState('idle');
+    }
+  };
+
+  const input = 'mt-1.5 block h-11 w-full rounded-xl border border-gray-200 bg-white px-3.5 text-[15px] text-gray-900 shadow-sm outline-none transition focus:border-accent-500 focus:ring-4 focus:ring-accent-100';
+  const label = 'block text-[14px] font-medium text-gray-700';
+
+  return (
+    <section id="demo" className="py-24">
+      <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start">
+        <div>
+          <SectionHeading center={false} eyebrow="Get started" title="Book a free demo">
+            Tell us about your PG. We’ll call you, show you PG Sathi on your own rooms, and once you pick a plan our team sets up your account for you.
+          </SectionHeading>
+          <ul className="mt-8 space-y-3">
+            {['A 15-minute call at a time that suits you', 'We set up your property, rooms and beds with you', 'Your residents join by QR from day one'].map((t) => (
+              <li key={t} className="flex gap-3 text-[15px] text-gray-700">
+                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-accent-50 text-accent-600">
+                  <Check className="size-3.5" />
+                </span>
+                {t}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <ContactButtons />
+          </div>
+        </div>
+        <div className="rounded-2xl bg-white p-6 shadow-[0_20px_50px_-24px_rgba(20,33,61,0.35)] ring-1 ring-gray-200 sm:p-8">
+          {state === 'sent' ? (
+            <div className="py-10 text-center">
+              <span className="mx-auto grid size-14 place-items-center rounded-full bg-success-50 text-success-600">
+                <Check className="size-7" />
+              </span>
+              <h3 className="mt-5 text-2xl font-semibold text-navy-900">Thanks, {f.owner_name.split(' ')[0]}!</h3>
+              <p className="mx-auto mt-3 max-w-sm text-[15px] text-gray-600">We’ve got your request for {f.business_name}. Our team will call you on {f.phone} within one working day.</p>
+            </div>
+          ) : (
+            <form onSubmit={(e) => void submit(e)} noValidate className="grid gap-5 sm:grid-cols-2">
+              <label className={`${label} sm:col-span-2`}>
+                PG name <span className="text-red-500">*</span>
+                <input className={input} value={f.business_name} onChange={set('business_name')} placeholder="e.g. Sunrise Stays" autoComplete="organization" />
+              </label>
+              <label className={label}>
+                Your name <span className="text-red-500">*</span>
+                <input className={input} value={f.owner_name} onChange={set('owner_name')} autoComplete="name" />
+              </label>
+              <label className={label}>
+                Phone <span className="text-red-500">*</span>
+                <input className={input} value={f.phone} onChange={set('phone')} type="tel" inputMode="tel" autoComplete="tel" placeholder="98450 00000" />
+              </label>
+              <label className={label}>
+                Email
+                <input className={input} value={f.email} onChange={set('email')} type="email" autoComplete="email" />
+              </label>
+              <label className={label}>
+                City
+                <input className={input} value={f.city} onChange={set('city')} autoComplete="address-level2" />
+              </label>
+              <label className={`${label} sm:col-span-2`}>
+                How many beds?
+                <select className={input} value={f.beds} onChange={set('beds')}>
+                  <option value="">Choose…</option>
+                  {BEDS.map((b) => (
+                    <option key={b}>{b}</option>
+                  ))}
+                </select>
+              </label>
+              <label className={`${label} sm:col-span-2`}>
+                Anything we should know?
+                <textarea className={`${input} h-24 py-2.5`} value={f.message} onChange={set('message')} placeholder="e.g. 2 PGs in Koramangala, best time to call is after 6pm" maxLength={1000} />
+              </label>
+              {error && <p className="text-[14px] text-red-600 sm:col-span-2">{error}</p>}
+              <button
+                type="submit"
+                disabled={state === 'sending'}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-navy-900 px-6 text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-navy-800 disabled:opacity-60 sm:col-span-2"
+              >
+                {state === 'sending' ? 'Sending…' : 'Book my free demo'} <ArrowRight className="size-4" />
+              </button>
+              <p className="text-center text-xs text-gray-500 sm:col-span-2">We only use your details to contact you about PG Sathi.</p>
+            </form>
+          )}
         </div>
       </div>
     </section>
@@ -480,8 +602,8 @@ const FAQS = [
     a: 'Yes. Add all your properties under one business and switch between them, or see everything together. Each property can have its own rooms, rents and join QR.',
   },
   {
-    q: 'Can I try it before paying?',
-    a: 'The Starter plan is free for one property with up to 30 residents, with every feature. Growth and Scale come with a 14-day free trial.',
+    q: 'How do I get started?',
+    a: 'Book a demo using the form above. We call you, help you choose a plan, and once that is done our team sets up your account and sends you a sign-in link. Your residents can then join by scanning your QR code.',
   },
 ];
 
@@ -536,15 +658,15 @@ function FinalCta() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_80%_at_50%_0%,rgba(108,109,232,0.45)_0%,rgba(20,33,61,0)_70%)]" aria-hidden />
         <div className="relative">
           <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">Your PG, organised by this weekend.</h2>
-          <p className="mx-auto mt-4 max-w-xl text-[17px] text-white/75">Start free with one property. Add your rooms, your residents and this month’s rent in under an hour.</p>
+          <p className="mx-auto mt-4 max-w-xl text-[17px] text-white/75">Book a free demo. We set up your rooms, beds and rent with you, and your residents join by QR from day one.</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button href={SIGN_UP_URL} variant="light" size="lg">
-              Start free <ArrowRight className="size-4" />
+            <Button href="#demo" variant="light" size="lg">
+              Book a free demo <ArrowRight className="size-4" />
             </Button>
             <ContactButtons light />
           </div>
           <p className="mt-6 flex items-center justify-center gap-2 text-[13px] text-white/60">
-            <Lock className="size-3.5" /> No card needed for the free plan
+            <Lock className="size-3.5" /> Your data stays private to your business
           </p>
         </div>
       </div>
@@ -566,9 +688,6 @@ function Footer() {
               {n.label}
             </a>
           ))}
-          <a href={SIGN_IN_URL} target="_blank" rel="noreferrer" className="hover:text-navy-900">
-            Sign in
-          </a>
         </nav>
         <p className="text-[13px] text-gray-400">© {new Date().getFullYear()} PG Sathi</p>
       </div>

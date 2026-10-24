@@ -1,9 +1,11 @@
 /**
  * Everything you may want to change without touching the page layout.
+ *
+ * "Book a demo" requests go to the PG Sathi database (Super admin → Leads).
+ * The publishable key is public by design; it can only call submit_lead here.
  */
-export const APP_URL = 'https://pg-sathi-admin.prathviholla67.workers.dev';
-export const SIGN_UP_URL = `${APP_URL}/sign-up`;
-export const SIGN_IN_URL = `${APP_URL}/sign-in`;
+export const SUPABASE_URL = 'https://qdnnzbytjhtxzdamndyl.supabase.co';
+export const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_SY3tyGEBfEkK_7onsqIUVg_cw4FwhXo';
 
 /**
  * Contact details for "Talk to us". Leave a value empty to hide that button.
@@ -26,8 +28,8 @@ export const PLANS = [
     period: 'forever',
     description: 'For a single PG getting organised.',
     limits: ['1 property', 'Up to 30 residents', '1 team login (you)'],
-    note: 'No card needed',
-    cta: 'Start free',
+    note: 'Set up for you by our team',
+    cta: 'Talk to us',
     highlighted: false,
   },
   {
@@ -36,8 +38,8 @@ export const PLANS = [
     period: 'per month',
     description: 'For growing PGs with a small team.',
     limits: ['Up to 3 properties', 'Up to 150 residents', 'Up to 5 team logins'],
-    note: '14-day free trial',
-    cta: 'Start free trial',
+    note: 'Billed monthly',
+    cta: 'Talk to us',
     highlighted: true,
   },
   {
@@ -46,8 +48,8 @@ export const PLANS = [
     period: 'per month',
     description: 'For operators running many properties.',
     limits: ['Unlimited properties', 'Unlimited residents', 'Unlimited team logins', 'Priority support'],
-    note: '14-day free trial',
-    cta: 'Start free trial',
+    note: 'Billed monthly',
+    cta: 'Talk to us',
     highlighted: false,
   },
 ] as const;
