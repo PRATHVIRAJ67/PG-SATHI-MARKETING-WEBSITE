@@ -40,12 +40,15 @@ function Logo({ light = false }: { light?: boolean }) {
   );
 }
 
-function Button({ href, children, variant = 'primary', size = 'md', className = '' }: { href: string; children: ReactNode; variant?: 'primary' | 'secondary' | 'light' | 'ghost'; size?: 'md' | 'lg'; className?: string }) {
+function Button({ href, children, variant = 'primary', size = 'md', className = '' }: { href: string; children: ReactNode; variant?: 'primary' | 'secondary' | 'light' | 'ghost' | 'lightSm' | 'ghostSm'; size?: 'md' | 'lg'; className?: string }) {
   const styles = {
     primary: 'bg-navy-900 text-white hover:bg-navy-800 shadow-sm',
     secondary: 'bg-white text-navy-900 ring-1 ring-gray-200 hover:ring-gray-300 hover:bg-gray-25',
     light: 'bg-white text-navy-900 hover:bg-accent-50',
     ghost: 'text-white ring-1 ring-white/30 hover:bg-white/10',
+    // Phones use light sections, so these look like primary / secondary there.
+    lightSm: 'bg-navy-900 text-white shadow-sm hover:bg-navy-800 sm:bg-white sm:text-navy-900 sm:shadow-none sm:hover:bg-accent-50',
+    ghostSm: 'bg-white text-navy-900 ring-1 ring-gray-200 sm:bg-transparent sm:text-white sm:ring-white/30 sm:hover:bg-white/10',
   }[variant];
   const sizes = { md: 'h-10 px-4 text-sm', lg: 'h-12 px-6 text-[15px]' }[size];
   const external = href.startsWith('http');
@@ -472,20 +475,20 @@ function MoreFeatures() {
     { icon: Smartphone, title: 'Phone or laptop', text: 'Run your PG from the browser on your phone or laptop. Nothing to install.' },
   ];
   return (
-    <section className="bg-navy-900 py-16 text-white sm:py-24">
+    <section className="border-y border-gray-100 bg-gray-25 py-16 text-navy-900 sm:border-0 sm:bg-navy-900 sm:py-24 sm:text-white">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent-200">And much more</p>
+          <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent-600 sm:text-accent-200">And much more</p>
           <h2 className="mt-3 text-[1.75rem] font-semibold tracking-tight sm:text-4xl">Small things that save you hours</h2>
         </div>
         <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:gap-5 lg:grid-cols-4">
           {items.map(({ icon: Icon, title, text }) => (
-            <div key={title} className="rounded-2xl bg-white/[0.04] p-4 ring-1 ring-white/10 sm:p-6">
-              <span className="grid size-9 place-items-center rounded-xl bg-accent-600/20 text-accent-200 sm:size-10">
+            <div key={title} className="rounded-2xl bg-white p-4 ring-1 ring-gray-200 sm:bg-white/[0.04] sm:p-6 sm:ring-white/10">
+              <span className="grid size-9 place-items-center rounded-xl bg-accent-50 text-accent-600 sm:size-10 sm:bg-accent-600/20 sm:text-accent-200">
                 <Icon className="size-[18px] sm:size-5" />
               </span>
               <h3 className="mt-3 text-[14px] font-semibold sm:mt-4 sm:text-[17px]">{title}</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-white/70 sm:mt-2 sm:text-[15px]">{text}</p>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-gray-600 sm:mt-2 sm:text-[15px] sm:text-white/70">{text}</p>
             </div>
           ))}
         </div>
@@ -542,11 +545,11 @@ function Pricing() {
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl bg-navy-900 p-7 text-center text-white">
-              <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent-200">Your price</p>
+            <div className="rounded-2xl bg-accent-50 p-7 text-center text-navy-900 ring-1 ring-accent-100 sm:bg-navy-900 sm:text-white sm:ring-0">
+              <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-accent-600 sm:text-accent-200">Your price</p>
               <p className="mt-3 text-2xl font-semibold tracking-tight">Made for your PG</p>
-              <p className="mt-2 text-[14px] leading-relaxed text-white/75">Tell us about your PG and we’ll share an affordable plan, set everything up for you and train your team.</p>
-              <Button href="#demo" variant="light" className="mt-6 w-full">
+              <p className="mt-2 text-[14px] leading-relaxed text-gray-600 sm:text-white/75">Tell us about your PG and we’ll share an affordable plan, set everything up for you and train your team.</p>
+              <Button href="#demo" variant="lightSm" className="mt-6 w-full">
                 Get your price <ArrowRight className="size-4" />
               </Button>
             </div>
@@ -739,7 +742,7 @@ function Faq() {
 }
 
 function ContactButtons({ light = false }: { light?: boolean }) {
-  const v = light ? 'ghost' : 'secondary';
+  const v = light ? 'ghostSm' : 'secondary';
   return (
     <>
       {CONTACT.whatsapp && (
@@ -764,18 +767,18 @@ function ContactButtons({ light = false }: { light?: boolean }) {
 function FinalCta() {
   return (
     <section id="get-started" className="px-4 pb-24 sm:px-6">
-      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-navy-900 px-6 py-16 text-center sm:px-12">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_80%_at_50%_0%,rgba(108,109,232,0.45)_0%,rgba(20,33,61,0)_70%)]" aria-hidden />
+      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-accent-50 px-6 py-14 text-center ring-1 ring-accent-100 sm:bg-navy-900 sm:px-12 sm:py-16 sm:ring-0">
+        <div className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(50%_80%_at_50%_0%,rgba(108,109,232,0.45)_0%,rgba(20,33,61,0)_70%)] sm:block" aria-hidden />
         <div className="relative">
-          <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">Your PG, organised by this weekend.</h2>
-          <p className="mx-auto mt-4 max-w-xl text-[17px] text-white/75">Book a free demo. We set up your rooms, beds and rent with you, and your residents join by QR from day one.</p>
+          <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-navy-900 sm:text-4xl sm:text-white">Your PG, organised by this weekend.</h2>
+          <p className="mx-auto mt-4 max-w-xl text-[16px] text-gray-600 sm:text-[17px] sm:text-white/75">Book a free demo. We set up your rooms, beds and rent with you, and your residents join by QR from day one.</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button href="#demo" variant="light" size="lg">
+            <Button href="#demo" variant="lightSm" size="lg">
               Book a free demo <ArrowRight className="size-4" />
             </Button>
             <ContactButtons light />
           </div>
-          <p className="mt-6 flex items-center justify-center gap-2 text-[13px] text-white/60">
+          <p className="mt-6 flex items-center justify-center gap-2 text-[13px] text-gray-500 sm:text-white/60">
             <Lock className="size-3.5" /> Your data stays private to your business
           </p>
         </div>
