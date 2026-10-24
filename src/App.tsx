@@ -357,7 +357,7 @@ function ResidentApp() {
     { icon: FileText, title: 'All bills and dues in one place', text: 'What is due, what is overdue and what has been paid, month by month.' },
     { icon: QrCode, title: 'Join by scanning a QR', text: 'New residents scan your QR in the app, fill in their details and create their own login.' },
     { icon: BedDouble, title: 'Room, rent and deposit', text: 'Their room and bed, monthly rent, due date and the deposit you hold, always up to date.' },
-    { icon: Bell, title: 'Rent reminders', text: 'Reminders on their phone before rent is due.', soon: true },
+    { icon: Phone, title: 'Call the PG in one tap', text: 'Your name and number are on their home screen, so they can reach you straight away.' },
   ];
   return (
     <section id="app" className="overflow-hidden bg-gradient-to-b from-accent-50/60 to-white py-24">
@@ -385,14 +385,11 @@ function ResidentApp() {
         </div>
 
         <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {points.map(({ icon: Icon, title, text, soon }) => (
+          {points.map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl bg-white p-6 ring-1 ring-gray-200">
-              <div className="flex items-center justify-between">
-                <span className="grid size-10 place-items-center rounded-xl bg-accent-50 text-accent-600">
-                  <Icon className="size-5" />
-                </span>
-                {soon && <span className="rounded-full bg-warning-50 px-2.5 py-1 text-xs font-semibold text-warning-600">Coming soon</span>}
-              </div>
+              <span className="grid size-10 place-items-center rounded-xl bg-accent-50 text-accent-600">
+                <Icon className="size-5" />
+              </span>
               <h3 className="mt-4 text-[17px] font-semibold text-navy-900">{title}</h3>
               <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{text}</p>
             </div>
