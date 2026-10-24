@@ -70,11 +70,8 @@ function SectionHeading({ eyebrow, title, children, center = true }: { eyebrow: 
   );
 }
 
-/**
- * A screenshot in a light browser frame. On phones the whole dashboard would be
- * unreadably small, so it zooms into the main content (past the sidebar).
- */
-function BrowserShot({ src, alt, className = '', focus = [40, 45] }: { src: string; alt: string; className?: string; focus?: [number, number] }) {
+/** A screenshot in a light browser frame, shown whole on every screen size. */
+function BrowserShot({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
   return (
     <div className={`overflow-hidden rounded-2xl bg-white shadow-[0_24px_60px_-20px_rgba(20,33,61,0.35)] ring-1 ring-gray-200 ${className}`}>
       <div className="flex h-7 items-center gap-1.5 border-b border-gray-100 bg-gray-50 px-3 sm:h-8" aria-hidden>
@@ -82,14 +79,7 @@ function BrowserShot({ src, alt, className = '', focus = [40, 45] }: { src: stri
         <span className="size-2 rounded-full bg-[#febc2e] sm:size-2.5" />
         <span className="size-2 rounded-full bg-[#28c840] sm:size-2.5" />
       </div>
-      {/* Phones: a readable close-up of the interesting part */}
-      <div
-        role="img"
-        aria-label={alt}
-        className="aspect-[4/3] bg-white bg-no-repeat sm:hidden"
-        style={{ backgroundImage: `url(${src})`, backgroundSize: '220% auto', backgroundPosition: `${focus[0]}% ${focus[1]}%` }}
-      />
-      <img src={src} alt={alt} width={2880} height={1800} loading="lazy" className="hidden h-auto w-full sm:block" />
+      <img src={src} alt={alt} width={2880} height={1800} loading="lazy" className="block h-auto w-full" />
     </div>
   );
 }
@@ -353,7 +343,7 @@ function Features() {
             'Rooms grouped by floor, with how full each floor is',
             'Tap any bed to assign a resident, move them or mark it unavailable',
           ]}
-          image={<BrowserShot focus={[33, 48]} src="/screens/rooms.png" alt="Rooms and beds grouped by floor, showing occupied and vacant beds" />}
+          image={<BrowserShot src="/screens/rooms.png" alt="Rooms and beds grouped by floor, showing occupied and vacant beds" />}
         />
 
         <FeatureRow
@@ -368,7 +358,7 @@ function Features() {
             'Advance payments carry forward as credit',
             'Deposits tracked from collection to deduction to refund',
           ]}
-          image={<BrowserShot focus={[30, 40]} src="/screens/payments.png" alt="Payments list with receipts, methods and amounts" />}
+          image={<BrowserShot src="/screens/payments.png" alt="Payments list with receipts, methods and amounts" />}
         />
 
         <FeatureRow
@@ -381,7 +371,7 @@ function Features() {
             'Every payment is verified with Razorpay before it is recorded',
             'Prefer plain UPI? Every bill carries a UPI QR with the exact amount',
           ]}
-          image={<BrowserShot focus={[100, 76]} src="/screens/online-payments.png" alt="Online payments settings with Razorpay and a UPI QR code" />}
+          image={<BrowserShot src="/screens/online-payments.png" alt="Online payments settings with Razorpay and a UPI QR code" />}
         />
 
         <FeatureRow
@@ -398,7 +388,7 @@ function Features() {
           ]}
           image={
             <div className="relative">
-              <BrowserShot focus={[28, 42]} src="/screens/join-requests.png" alt="Join requests waiting for approval" />
+              <BrowserShot src="/screens/join-requests.png" alt="Join requests waiting for approval" />
               <PhoneShot src="/screens/join-form-phone.png" alt="Join form on a phone" className="absolute -bottom-6 -right-2 w-[110px] sm:-bottom-8 sm:-left-4 sm:right-auto sm:w-[190px] lg:-left-10" />
             </div>
           }
@@ -410,7 +400,7 @@ function Features() {
           title="Know exactly where you stand"
           text="Collection, outstanding rent, occupancy, expenses and income per property. Export to Excel (CSV) or print for your accountant."
           points={['Month-by-month income against expenses', 'Who owes what, and since when', 'Occupancy for every property']}
-          image={<BrowserShot focus={[24, 34]} src="/screens/reports.png" alt="Reports for collection, outstanding rent, occupancy and expenses" />}
+          image={<BrowserShot src="/screens/reports.png" alt="Reports for collection, outstanding rent, occupancy and expenses" />}
         />
       </div>
     </section>
@@ -526,7 +516,7 @@ function HowItWorks() {
               </li>
             ))}
           </ol>
-          <BrowserShot focus={[50, 52]} src="/screens/bulk-rooms.png" alt="Adding rooms 301 to 310 in bulk with beds and rent" />
+          <BrowserShot src="/screens/bulk-rooms.png" alt="Adding rooms 301 to 310 in bulk with beds and rent" />
         </div>
       </div>
     </section>
