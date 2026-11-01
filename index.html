@@ -1,20 +1,46 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-IN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>%SEO_TITLE%</title>
+    <meta name="description" content="%SEO_DESCRIPTION%" />
+    <meta name="keywords" content="%SEO_KEYWORDS%" />
+    <meta name="author" content="PG Sathi" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="%SITE_URL%/" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <meta name="theme-color" content="#14213D" />
-    <title>PG Sathi: PG management software for owners in India</title>
-    <meta name="description" content="Run your PG, hostel or co-living from one place: rooms and beds, residents, monthly rent, online payments by UPI and Razorpay, deposits, expenses and reports. Book a free demo and our team sets you up." />
+    <meta name="geo.region" content="IN" />
+    <meta name="geo.placename" content="India" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PG Sathi" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:url" content="%SITE_URL%/" />
     <meta property="og:title" content="PG Sathi: run your PG from one screen" />
     <meta property="og:description" content="Rooms, residents, rent and payments for PG owners. Residents join by QR and pay online." />
-    <meta property="og:image" content="/screens/overview.png" />
+    <meta property="og:image" content="%SEO_IMAGE%" />
+    <meta property="og:image:width" content="2880" />
+    <meta property="og:image:height" content="1800" />
+    <meta property="og:image:alt" content="%SEO_IMAGE_ALT%" />
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PG Sathi: run your PG from one screen" />
+    <meta name="twitter:description" content="Rooms, residents, rent and payments for PG owners. Residents join by QR and pay online." />
+    <meta name="twitter:image" content="%SEO_IMAGE%" />
+    <meta name="twitter:image:alt" content="%SEO_IMAGE_ALT%" />
+
+    <script type="application/ld+json">%JSON_LD%</script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>PG Sathi: PG management software for owners in India</h1>
+      <p>%SEO_DESCRIPTION%</p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

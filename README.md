@@ -33,6 +33,17 @@ npm run dev        # http://localhost:5180
 npm run deploy     # builds and uploads to Cloudflare (needs `npx wrangler login` once)
 ```
 
-It is published as `pg-sathi-website` on your Cloudflare account. To use your
-own domain (for example `pgsathi.in`), add it in Cloudflare → Workers →
-pg-sathi-website → Settings → Domains & Routes.
+It is published as `pg-sathi-website` on your Cloudflare account and served at
+`pgsathi.online` and `www.pgsathi.online` (set in `wrangler.jsonc`; the domain
+must be Active in Cloudflare first).
+
+## SEO
+
+- The address, title, description and keywords live in `seo.config.ts`.
+- `seo-plugin.ts` fills them into `index.html` at build time, adds the
+  structured data (Organization, WebSite, SoftwareApplication and FAQPage, built
+  from `src/faqs.ts`) and writes `dist/sitemap.xml`.
+- `public/robots.txt`, `public/404.html` and `public/_headers` cover crawling,
+  real 404s, caching and keeping the workers.dev address out of search results.
+- After the first deploy, add the site in Google Search Console and Bing
+  Webmaster Tools and submit `https://pgsathi.online/sitemap.xml`.

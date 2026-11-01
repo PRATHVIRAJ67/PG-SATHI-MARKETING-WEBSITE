@@ -1,0 +1,10 @@
+{
+  "name": "PG Sathi",
+  "short_name": "PG Sathi",
+  "description": "PG management software for owners in India.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#14213D",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
